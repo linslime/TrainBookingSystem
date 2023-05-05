@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <STYLE>
+        form{
+            margin: 0 auto;
+        }
+        .divForm{
+            width: 100%;
+            height: 100%;
+            text-align: center;/*(让div中的内容居中)*/
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
+        h1{
+            display: none;
+        }
+    </STYLE>
+    <script language="JavaScript">
+
+        window.onload = function(){
+            var my = document.querySelector(".h").textContent;
+            if(my == 0){
+                document.getElementById("table1").style.display='block';
+                document.getElementById("table2").style.display='none';
+            }else if(my == 1){
+                document.getElementById("table1").style.display='none';
+                document.getElementById("table2").style.display='block';
+            }
+        }
+        function show(){
+            var myselect=document.getElementById("select");
+            var index = myselect.selectedIndex ;
+            var value = myselect.options[index].value;
+            if(value == 0){
+                document.getElementById("table1").style.display='block';
+                document.getElementById("table2").style.display='none';
+            }else if(value == 1){
+                document.getElementById("table1").style.display='none';
+                document.getElementById("table2").style.display='block';
+            }
+
+        }
+
+    </script>
+</head>
+<body >
+
+<div class="divForm"><form th:action="@{/tickets}">
+    出发站:<select  name = "fromStationId">
+    <option th:each="station:${stations}">
+        <h5 th:text="${station.getStationId()}"> </h5>
+    </option>
+</select>
+    目的站:<select  name = "toStationId">
+    <option th:each="station:${stations}">
+        <h5 th:text="${station.getStationId()}"> </h5>
+    </option>
+</select>
+    出发时间:<select  name = "departureTime">
+    <option value="2023-1-1">
+        2023-1-1
+    </option>
+    <option value="2023-1-2">
+        2023-1-2
+    </option>
+    <option value="2023-1-3">
+        2023-1-3
+    </option>
+    <option value="2023-1-4">
+        2023-1-4
+    </option>
+    <option value="2023-1-5">
+        2023-1-5
+    </option>
+    <option value="2023-1-6">
+        2023-1-6
+    </option>
+    <option value="2023-1-7">
+        2023-1-7
+    </option>
+</select>
+    排序方式:<select  name = "sortWay">
+    <option value="departureTime">
+        出发时间
+    </option>
+    <option value="arrivalTime">
+        到达时间
+    </option>
+    <option value="travelTime">
+        中间时间
+    </option>
+    <option value="price">
+        价格
+    </option>
+</select>
+    到达方式:<select  name = "isTransfer" id = "select">
+    <option value=0>直达</option>
+    <option value=1>中转</option>
+</select>
+    <button type="submit" onclick="show()">提交</button>
+    <!--    <p>增加节点</p>-->
+    <!--    noteid:<input type="text" name="addnoteid" id=""> <br>-->
+    <!--    notename:<input type="text" name="addnotename" id=""> <br>-->
+    <!--    <button type="submit">提交</button>-->
+</form></div>
+
+<div >
+    <table id = "table1" border="1" width="600" height="100" align="center" cellpadding="0" cellspacing="3">
+    <tr >
+        <th>车次</th>
+        <th>出发地</th>
+        <th>目的地</th>
+        <th>出发时间</th>
+        <th>到达时间</th>
+        <th>经过时间</th>
+        <th>价格</th>
+        <!--        <th>hardSeatPrice</th>-->
+        <!--        <th>firstClassSeatPrice</th>-->
+        <!--        <th>secondClassSeatPrice</th>-->
+        <!--        <th>businessClassSeatPrice</th>-->
+    </tr>
+    <tr  th:each="ticketModels:${ticketModels}">
+        <td  th:text="${ticketModels.getTrainNo()}">1</td>
+        <td  th:text="${ticketModels.getDepartureStationId()}">2</td>
+        <td  th:text="${ticketModels.getArrivalStationId()}">3</td>
+        <td  th:text="${ticketModels.getDepartureTime()}">4</td>
+        <td  th:text="${ticketModels.getArrivalTime()}">5</td>
+        <td  th:text="${ticketModels.getPassTime()}">6</td>
+        <td  th:text="${ticketModels.getSoftSeatPrice()}">7</td>
+        <!--        <td  th:text="${ticketModels.getHardSeatPrice()}">8</td>-->
+        <!--        <td  th:text="${ticketModels.getFirstClassSeatPrice()}">9</td>-->
+        <!--        <td  th:text="${ticketModels.getSecondClassSeatPrice()}">10</td>-->
+        <!--        <td  th:text="${ticketModels.getBusinessClassSeatPrice}">11</td>-->
+    </tr>
+</table>
+    <table id = "table2" border="1" width="600" height="100" align="center" cellpadding="0" cellspacing="3">
+        <tr >
+            <th>车次</th>
+            <th>出发地</th>
+            <th>目的地</th>
+            <th>出发时间</th>
+            <th>到达时间</th>
+            <th>经过时间</th>
+            <th>价格</th>
+            <!--        <th>hardSeatPrice</th>-->
+            <!--        <th>firstClassSeatPrice</th>-->
+            <!--        <th>secondClassSeatPrice</th>-->
+            <!--        <th>businessClassSeatPrice</th>-->
+        </tr>
+        <tr  th:each="ticketModels:${ticketModels}">
+            <td  th:text="${ticketModels.getTrainNo()}">1</td>
+            <td  th:text="${ticketModels.getDepartureStationId()}">2</td>
+            <td  th:text="${ticketModels.getArrivalStationId()}">3</td>
+            <td  th:text="${ticketModels.getDepartureTime()}">4</td>
+            <td  th:text="${ticketModels.getArrivalTime()}">5</td>
+            <td  th:text="${ticketModels.getPassTime()}">6</td>
+            <td  th:text="${ticketModels.getSoftSeatPrice()}">7</td>
+            <!--        <td  th:text="${ticketModels.getHardSeatPrice()}">8</td>-->
+            <!--        <td  th:text="${ticketModels.getFirstClassSeatPrice()}">9</td>-->
+            <!--        <td  th:text="${ticketModels.getSecondClassSeatPrice()}">10</td>-->
+            <!--        <td  th:text="${ticketModels.getBusinessClassSeatPrice}">11</td>-->
+        </tr>
+    </table>
+
+</div>
+
+<h1 class = "h"th:text="${mesg}"></h1>
+
+</body>
+</html>

@@ -1,0 +1,18 @@
+{
+  "routeId" : "RI12",
+  "stationList" : [ {
+    "nodeType" : "departure",
+    "stationId" : "SI1",
+    "ext" : "ext"
+  }, {
+    "nodeType" : "stops",
+    "stationId" : "SI11",
+    "railwayId" : "RI5",
+    "ext" : "ext"
+  },  {
+    "nodeType" : "arrival",
+    "stationId" : "SI15",
+    "railwayId" : "RI41",
+    "ext" : "ext"
+  } ]
+}
