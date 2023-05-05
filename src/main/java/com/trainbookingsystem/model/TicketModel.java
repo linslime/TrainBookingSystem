@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Data
 public class TicketModel {
-    private long user;
+    private long userId;
     private long trainNo;
     private long departureStationId;
     private long arrivalStationId;
