@@ -42,4 +42,16 @@ public class BookingController {
     public List<TransfersTicket> getTransfersTicketByUserId(long id){
         return userMapper.getTransferTicketByUserId(id);
     }
+
+    @GetMapping("/api/deleteDirectTicketByUserId")
+    public Result deleteDirectTicketByUserId(long id){
+        bookingMapper.deleteDirectTicketByUserId(id);
+        return new Result(200);
+    }
+
+    @GetMapping("/api/deleteTransfersTicketByUserId")
+    public Result deleteTransfersTicketByUserId(long id){
+        bookingMapper.deleteTransfersTicketByUserId(id);
+        return new Result(200);
+    }
 }

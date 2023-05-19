@@ -10,7 +10,7 @@ public class TicketModel {
     private long userId;
     private long trainNo;
     private long departureStationId;
-    private String departureSationName;
+    private String departureStationName;
     private long arrivalStationId;
     private String arrivalStationName;
     private Date departureTime;

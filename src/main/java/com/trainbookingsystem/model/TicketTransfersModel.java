@@ -39,13 +39,13 @@ public class TicketTransfersModel {
     private long passTime;
     private long stopTime;
 
-    public Date departureTime(){
-        return departureTime1;
+    public Date getDepartureTime(){
+        return this.departureTime1;
     }
     public void setFirstTicketModel(TicketModel ticketModel){
         trainNo1 = ticketModel.getTrainNo();
         departureStationId1 = ticketModel.getDepartureStationId();
-        departureStationName1 = ticketModel.getDepartureSationName();
+        departureStationName1 = ticketModel.getDepartureStationName();
         arrivalStationId1 = ticketModel.getArrivalStationId();
         arrivalStationName1 = ticketModel.getArrivalStationName();
         setDepartureTime1(ticketModel.getDepartureTime());
@@ -60,7 +60,7 @@ public class TicketTransfersModel {
     public void setSecondTicketModel(TicketModel ticketModel){
         trainNo1 = ticketModel.getTrainNo();
         departureStationId2 = ticketModel.getDepartureStationId();
-        departureStationName2 = ticketModel.getDepartureSationName();
+        departureStationName2 = ticketModel.getDepartureStationName();
         arrivalStationId2 = ticketModel.getArrivalStationId();
         arrivalStationName2 = ticketModel.getArrivalStationName();
         setDepartureTime2(ticketModel.getDepartureTime());

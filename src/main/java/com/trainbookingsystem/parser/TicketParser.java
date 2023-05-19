@@ -20,7 +20,7 @@ public class TicketParser {
 
         ticketModel.setTrainNo(trainModel.getTrainNo());
         ticketModel.setDepartureStationId(departureStationId);
-        ticketModel.setDepartureSationName(stationMapper.getStationNameById(departureStationId));
+        ticketModel.setDepartureStationName(stationMapper.getStationNameById(departureStationId));
         ticketModel.setArrivalStationId(arrivalStationId);
         ticketModel.setArrivalStationName(stationMapper.getStationNameById(arrivalStationId));
         Date a = getArrivalTime(arrivalStationId, trainModel.getBaseStationModels());

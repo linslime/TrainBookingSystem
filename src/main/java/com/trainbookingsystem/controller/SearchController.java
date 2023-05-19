@@ -60,7 +60,6 @@ public class SearchController {
         Date date = null;
         try {
             date = sdf.parse( selectParm.getDepartureTime() );
-//            System.out.println(date);
         } catch (ParseException e) {
             e.printStackTrace();
         }
