@@ -32,7 +32,7 @@ public class TicketBookingSearcher {
     private Long toStationId;
     private Date date;
     //排序
-    private String isSortedBy;
+    private int isSortedBy;
 
 
     @Resource
@@ -41,10 +41,10 @@ public class TicketBookingSearcher {
     TrainTransfersMapper trainTransfersMapper;
     @Resource
     TrainMapper trainMapper;
-
+    @Resource
+    TicketParser ticketParser = new TicketParser();
     public List<TicketModel> getDirectTickets(){
         TrainParser trainParser = new TrainParser();
-        TicketParser ticketParser = new TicketParser();
         List<Train> trains = ticketBookingSearcherMapper.selectTrainByStation(fromStationId, toStationId);
         List<TrainModel> trainModels = new ArrayList<>();
         for (Train train : trains) {
@@ -58,13 +58,16 @@ public class TicketBookingSearcher {
         }
         List<TicketModel> ticketModels = new ArrayList<>();
         for (TrainModel trainModel : trainModels) {
-            ticketModels.add(ticketParser.getTicketModel(fromStationId, toStationId, trainModel));
+            TicketModel t = ticketParser.getTicketModel(fromStationId, toStationId, trainModel);
+            if(t.departureTime().getTime() < date.getTime()){
+                ticketModels.add(t);
+            }
         }
+        sortTicketModel(ticketModels);
         return ticketModels;
     }
     public List<TicketTransfersModel> getTransitTickets(){
         TrainParser trainParser = new TrainParser();
-        TicketParser ticketParser = new TicketParser();
         List<TrainTransfersModel> trainTransfersModels = trainTransfersMapper.select(fromStationId,toStationId);
         List<TicketTransfersModel> ticketTransfersModels = new ArrayList<>();
         Train train = null;
@@ -76,7 +79,6 @@ public class TicketBookingSearcher {
             train = trainMapper.selectByTrainNo(trainTransfersModel.getFirstTrainNo());
             try {
                 TrainModel trainModel = trainParser.parser(train.getTrainDefine());
-
                 ticketTransfersModel.setFirstTicketModel(ticketParser.getTicketModel(trainTransfersModel.getFromStationId(),trainTransfersModel.getTransfersStationId(),trainModel));
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -90,8 +92,357 @@ public class TicketBookingSearcher {
                 e.printStackTrace();
             }
             ticketTransfersModel.setTransfersStationId(trainTransfersModel.getTransfersStationId());
-            ticketTransfersModels.add(ticketTransfersModel);
+            if (ticketTransfersModel.getStopTime() > 0 && ticketTransfersModel.departureTime().getTime() < date.getTime()){
+                ticketTransfersModels.add(ticketTransfersModel);
+            }
+        }
+        sortTicketTransfersModel(ticketTransfersModels);
+        for(TicketTransfersModel t:ticketTransfersModels){
+            System.out.println(t.getPassTime());
         }
         return ticketTransfersModels;
+    }
+
+    private void quickSortTicketModelAscendingByPassTime(List<TicketModel> ticketModels,int low,int high){
+        int i,j;
+        TicketModel temp,t;
+        if(low>high){
+            return;
+        }
+        i=low;
+        j=high;
+        temp = ticketModels.get(low);
+        while (i<j) {
+            //先看右边，依次往左递减
+            while (temp.getPassTime()<=ticketModels.get(j).getPassTime()&&i<j) {
+                j--;
+            }
+            //再看左边，依次往右递增
+            while (temp.getPassTime()>=ticketModels.get(i).getPassTime()&&i<j) {
+                i++;
+            }
+            //如果满足条件则交换
+            if (i<j) {
+                t = ticketModels.get(j);
+                ticketModels.set(j,ticketModels.get(i));
+                ticketModels.set(i,t);
+            }
+
+        }
+        ticketModels.set(low,ticketModels.get(i));
+        ticketModels.set(i,temp);
+        quickSortTicketModelAscendingByPassTime(ticketModels,low,j-1);
+        quickSortTicketModelAscendingByPassTime(ticketModels,j+1,high);
+        return;
+    }
+    private void quickSortTicketModelDescendingByPassTime(List<TicketModel> ticketModels,int low,int high){
+        int i,j;
+        TicketModel temp,t;
+        if(low>high){
+            return;
+        }
+        i=low;
+        j=high;
+        temp = ticketModels.get(low);
+        while (i<j) {
+            //先看右边，依次往左递减
+            while (temp.getPassTime()>=ticketModels.get(j).getPassTime()&&i<j) {
+                j--;
+            }
+            //再看左边，依次往右递增
+            while (temp.getPassTime()<=ticketModels.get(i).getPassTime()&&i<j) {
+                i++;
+            }
+            //如果满足条件则交换
+            if (i<j) {
+                t = ticketModels.get(j);
+                ticketModels.set(j,ticketModels.get(i));
+                ticketModels.set(i,t);
+            }
+
+        }
+        ticketModels.set(low,ticketModels.get(i));
+        ticketModels.set(i,temp);
+        quickSortTicketModelDescendingByPassTime(ticketModels,low,j-1);
+        quickSortTicketModelDescendingByPassTime(ticketModels,j+1,high);
+        return;
+    }
+    private void quickSortTicketModelAscendingByDepartureTime(List<TicketModel> ticketModels,int low,int high){
+        int i,j;
+        TicketModel temp,t;
+        if(low>high){
+            return;
+        }
+        i=low;
+        j=high;
+        temp = ticketModels.get(low);
+        while (i<j) {
+            //先看右边，依次往左递减
+            while (temp.departureTime().getTime()<=ticketModels.get(j).departureTime().getTime()&&i<j) {
+                j--;
+            }
+            //再看左边，依次往右递增
+            while (temp.departureTime().getTime()>=ticketModels.get(i).departureTime().getTime()&&i<j) {
+                i++;
+            }
+            //如果满足条件则交换
+            if (i<j) {
+                t = ticketModels.get(j);
+                ticketModels.set(j,ticketModels.get(i));
+                ticketModels.set(i,t);
+            }
+
+        }
+        ticketModels.set(low,ticketModels.get(i));
+        ticketModels.set(i,temp);
+        quickSortTicketModelAscendingByDepartureTime(ticketModels,low,j-1);
+        quickSortTicketModelAscendingByDepartureTime(ticketModels,j+1,high);
+        return;
+    }
+    private void quickSortTicketModelDescendingByDepartureTime(List<TicketModel> ticketModels,int low,int high){
+        int i,j;
+        TicketModel temp,t;
+        if(low>high){
+            return;
+        }
+        i=low;
+        j=high;
+        temp = ticketModels.get(low);
+        while (i<j) {
+            //先看右边，依次往左递减
+            while (temp.departureTime().getTime()>=ticketModels.get(j).departureTime().getTime()&&i<j) {
+                j--;
+            }
+            //再看左边，依次往右递增
+            while (temp.departureTime().getTime()<=ticketModels.get(i).departureTime().getTime()&&i<j) {
+                i++;
+            }
+            //如果满足条件则交换
+            if (i<j) {
+                t = ticketModels.get(j);
+                ticketModels.set(j,ticketModels.get(i));
+                ticketModels.set(i,t);
+            }
+
+        }
+        ticketModels.set(low,ticketModels.get(i));
+        ticketModels.set(i,temp);
+        quickSortTicketModelDescendingByDepartureTime(ticketModels,low,j-1);
+        quickSortTicketModelDescendingByDepartureTime(ticketModels,j+1,high);
+        return;
+    }
+    private void sortTicketModel(List<TicketModel> ticketModels){
+        if(isSortedBy == 1){
+            quickSortTicketModelAscendingByPassTime(ticketModels,0,ticketModels.size()-1);
+        }else if (isSortedBy == 2){
+            quickSortTicketModelDescendingByPassTime(ticketModels,0,ticketModels.size()-1);
+        }else if (isSortedBy == 3){
+            quickSortTicketModelDescendingByDepartureTime(ticketModels,0,ticketModels.size()-1);
+        }else{
+            quickSortTicketModelAscendingByDepartureTime(ticketModels,0,ticketModels.size()-1);
+        }
+
+    }
+
+    private void quickSortTicketTransfersModelAscendingByPassTime(List<TicketTransfersModel> ticketTransfersModels,int low,int high){
+        int i,j;
+        TicketTransfersModel temp,t;
+        if(low>high){
+            return;
+        }
+        i=low;
+        j=high;
+        temp = ticketTransfersModels.get(low);
+        while (i<j) {
+            //先看右边，依次往左递减
+            while (temp.getPassTime()<=ticketTransfersModels.get(j).getPassTime()&&i<j) {
+                j--;
+            }
+            //再看左边，依次往右递增
+            while (temp.getPassTime()>=ticketTransfersModels.get(i).getPassTime()&&i<j) {
+                i++;
+            }
+            //如果满足条件则交换
+            if (i<j) {
+                t = ticketTransfersModels.get(j);
+                ticketTransfersModels.set(j,ticketTransfersModels.get(i));
+                ticketTransfersModels.set(i,t);
+            }
+        }
+        ticketTransfersModels.set(low,ticketTransfersModels.get(i));
+        ticketTransfersModels.set(i,temp);
+        quickSortTicketTransfersModelAscendingByPassTime(ticketTransfersModels,low,j-1);
+        quickSortTicketTransfersModelAscendingByPassTime(ticketTransfersModels,j+1,high);
+        return;
+    }
+    private void quickSortTicketTransfersModelDescendingByPassTime(List<TicketTransfersModel> ticketTransfersModels,int low,int high){
+        int i,j;
+        TicketTransfersModel temp,t;
+        if(low>high){
+            return;
+        }
+        i=low;
+        j=high;
+        temp = ticketTransfersModels.get(low);
+        while (i<j) {
+            //先看右边，依次往左递减
+            while (temp.getPassTime()>=ticketTransfersModels.get(j).getPassTime()&&i<j) {
+                j--;
+            }
+            //再看左边，依次往右递增
+            while (temp.getPassTime()<=ticketTransfersModels.get(i).getPassTime()&&i<j) {
+                i++;
+            }
+            //如果满足条件则交换
+            if (i<j) {
+                t = ticketTransfersModels.get(j);
+                ticketTransfersModels.set(j,ticketTransfersModels.get(i));
+                ticketTransfersModels.set(i,t);
+            }
+        }
+        ticketTransfersModels.set(low,ticketTransfersModels.get(i));
+        ticketTransfersModels.set(i,temp);
+        quickSortTicketTransfersModelDescendingByPassTime(ticketTransfersModels,low,j-1);
+        quickSortTicketTransfersModelDescendingByPassTime(ticketTransfersModels,j+1,high);
+        return;
+    }
+    private void quickSortTicketTransfersModelAscendingByDepartureTime(List<TicketTransfersModel> ticketTransfersModels,int low,int high){
+        int i,j;
+        TicketTransfersModel temp,t;
+        if(low>high){
+            return;
+        }
+        i=low;
+        j=high;
+        temp = ticketTransfersModels.get(low);
+        while (i<j) {
+            //先看右边，依次往左递减
+            while (temp.departureTime().getTime()<=ticketTransfersModels.get(j).departureTime().getTime()&&i<j) {
+                j--;
+            }
+            //再看左边，依次往右递增
+            while (temp.departureTime().getTime()>=ticketTransfersModels.get(i).departureTime().getTime()&&i<j) {
+                i++;
+            }
+            //如果满足条件则交换
+            if (i<j) {
+                t = ticketTransfersModels.get(j);
+                ticketTransfersModels.set(j,ticketTransfersModels.get(i));
+                ticketTransfersModels.set(i,t);
+            }
+        }
+        ticketTransfersModels.set(low,ticketTransfersModels.get(i));
+        ticketTransfersModels.set(i,temp);
+        quickSortTicketTransfersModelAscendingByDepartureTime(ticketTransfersModels,low,j-1);
+        quickSortTicketTransfersModelAscendingByDepartureTime(ticketTransfersModels,j+1,high);
+        return;
+    }
+    private void quickSortTicketTransfersModelDescendingByDepartureTime(List<TicketTransfersModel> ticketTransfersModels,int low,int high){
+        int i,j;
+        TicketTransfersModel temp,t;
+        if(low>high){
+            return;
+        }
+        i=low;
+        j=high;
+        temp = ticketTransfersModels.get(low);
+        while (i<j) {
+            //先看右边，依次往左递减
+            while (temp.departureTime().getTime()>=ticketTransfersModels.get(j).departureTime().getTime()&&i<j) {
+                j--;
+            }
+            //再看左边，依次往右递增
+            while (temp.departureTime().getTime()<=ticketTransfersModels.get(i).departureTime().getTime()&&i<j) {
+                i++;
+            }
+            //如果满足条件则交换
+            if (i<j) {
+                t = ticketTransfersModels.get(j);
+                ticketTransfersModels.set(j,ticketTransfersModels.get(i));
+                ticketTransfersModels.set(i,t);
+            }
+        }
+        ticketTransfersModels.set(low,ticketTransfersModels.get(i));
+        ticketTransfersModels.set(i,temp);
+        quickSortTicketTransfersModelDescendingByDepartureTime(ticketTransfersModels,low,j-1);
+        quickSortTicketTransfersModelDescendingByDepartureTime(ticketTransfersModels,j+1,high);
+        return;
+    }
+    private void quickSortTicketTransfersModelAscendingByStopTime(List<TicketTransfersModel> ticketTransfersModels,int low,int high){
+        int i,j;
+        TicketTransfersModel temp,t;
+        if(low>high){
+            return;
+        }
+        i=low;
+        j=high;
+        temp = ticketTransfersModels.get(low);
+        while (i<j) {
+            //先看右边，依次往左递减
+            while (temp.getStopTime()<=ticketTransfersModels.get(j).getStopTime()&&i<j) {
+                j--;
+            }
+            //再看左边，依次往右递增
+            while (temp.getStopTime()>=ticketTransfersModels.get(i).getStopTime()&&i<j) {
+                i++;
+            }
+            //如果满足条件则交换
+            if (i<j) {
+                t = ticketTransfersModels.get(j);
+                ticketTransfersModels.set(j,ticketTransfersModels.get(i));
+                ticketTransfersModels.set(i,t);
+            }
+        }
+        ticketTransfersModels.set(low,ticketTransfersModels.get(i));
+        ticketTransfersModels.set(i,temp);
+        quickSortTicketTransfersModelAscendingByStopTime(ticketTransfersModels,low,j-1);
+        quickSortTicketTransfersModelAscendingByStopTime(ticketTransfersModels,j+1,high);
+        return;
+    }
+    private void quickSortTicketTransfersModelDescendingByStopTime(List<TicketTransfersModel> ticketTransfersModels,int low,int high){
+        int i,j;
+        TicketTransfersModel temp,t;
+        if(low>high){
+            return;
+        }
+        i=low;
+        j=high;
+        temp = ticketTransfersModels.get(low);
+        while (i<j) {
+            //先看右边，依次往左递减
+            while (temp.getStopTime()>=ticketTransfersModels.get(j).getStopTime()&&i<j) {
+                j--;
+            }
+            //再看左边，依次往右递增
+            while (temp.getStopTime()<=ticketTransfersModels.get(i).getStopTime()&&i<j) {
+                i++;
+            }
+            //如果满足条件则交换
+            if (i<j) {
+                t = ticketTransfersModels.get(j);
+                ticketTransfersModels.set(j,ticketTransfersModels.get(i));
+                ticketTransfersModels.set(i,t);
+            }
+        }
+        ticketTransfersModels.set(low,ticketTransfersModels.get(i));
+        ticketTransfersModels.set(i,temp);
+        quickSortTicketTransfersModelDescendingByStopTime(ticketTransfersModels,low,j-1);
+        quickSortTicketTransfersModelDescendingByStopTime(ticketTransfersModels,j+1,high);
+        return;
+    }
+    private void sortTicketTransfersModel(List<TicketTransfersModel> ticketTransfersModels){
+        if(isSortedBy == 1){
+            quickSortTicketTransfersModelDescendingByPassTime(ticketTransfersModels,0,ticketTransfersModels.size()-1);
+        }else if(isSortedBy == 2){
+            quickSortTicketTransfersModelAscendingByDepartureTime(ticketTransfersModels,0,ticketTransfersModels.size()-1);
+        }else if(isSortedBy == 3){
+            quickSortTicketTransfersModelDescendingByDepartureTime(ticketTransfersModels,0,ticketTransfersModels.size()-1);
+        }else if(isSortedBy == 4){
+            quickSortTicketTransfersModelAscendingByStopTime(ticketTransfersModels,0,ticketTransfersModels.size()-1);
+        }else if(isSortedBy == 5){
+            quickSortTicketTransfersModelDescendingByStopTime(ticketTransfersModels,0,ticketTransfersModels.size()-1);
+        }else{
+            quickSortTicketTransfersModelAscendingByPassTime(ticketTransfersModels,0,ticketTransfersModels.size()-1);
+        }
     }
 }

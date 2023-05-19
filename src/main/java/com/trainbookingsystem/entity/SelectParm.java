@@ -7,5 +7,5 @@ public class SelectParm {
     private long fromStationId;
     private long toStationId;
     private String departureTime;
-    private String sortWay;
+    private int sortWay;
 }

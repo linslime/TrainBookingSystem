@@ -8,12 +8,12 @@ import java.util.Date;
 
 @Data
 public class TicketTransfersModel {
-//    private TicketModel firstTicketModel;
-//    private TicketModel secondTicketModel;
     private long userId;
     private long trainNo1;
     private long departureStationId1;
+    private String departureStationName1;
     private long arrivalStationId1;
+    private String arrivalStationName1;
     private Date departureTime1;
     private Date arrivalTime1;
     private long passTime1;
@@ -24,7 +24,9 @@ public class TicketTransfersModel {
     private float businessClassSeatPrice1;
     private long trainNo2;
     private long departureStationId2;
+    private String departureStationName2;
     private long arrivalStationId2;
+    private String arrivalStationName2;
     private Date departureTime2;
     private Date arrivalTime2;
     private long passTime2;
@@ -37,12 +39,15 @@ public class TicketTransfersModel {
     private long passTime;
     private long stopTime;
 
+    public Date departureTime(){
+        return departureTime1;
+    }
     public void setFirstTicketModel(TicketModel ticketModel){
         trainNo1 = ticketModel.getTrainNo();
         departureStationId1 = ticketModel.getDepartureStationId();
+        departureStationName1 = ticketModel.getDepartureSationName();
         arrivalStationId1 = ticketModel.getArrivalStationId();
-        departureStationId1 = ticketModel.getDepartureStationId();
-        arrivalStationId1 = ticketModel.getArrivalStationId();
+        arrivalStationName1 = ticketModel.getArrivalStationName();
         setDepartureTime1(ticketModel.getDepartureTime());
         setArrivalTime1(ticketModel.getArrivalTime());
         passTime1 = ticketModel.getPassTime();
@@ -51,15 +56,13 @@ public class TicketTransfersModel {
         firstClassSeatPrice1 = ticketModel.getFirstClassSeatPrice();
         secondClassSeatPrice1 = ticketModel.getSecondClassSeatPrice();
         businessClassSeatPrice1 = ticketModel.getBusinessClassSeatPrice();
-
-
     }
     public void setSecondTicketModel(TicketModel ticketModel){
         trainNo1 = ticketModel.getTrainNo();
         departureStationId2 = ticketModel.getDepartureStationId();
+        departureStationName2 = ticketModel.getDepartureSationName();
         arrivalStationId2 = ticketModel.getArrivalStationId();
-        departureStationId2 = ticketModel.getDepartureStationId();
-        arrivalStationId2 = ticketModel.getArrivalStationId();
+        arrivalStationName2 = ticketModel.getArrivalStationName();
         setDepartureTime2(ticketModel.getDepartureTime());
         setArrivalTime2(ticketModel.getArrivalTime());
         passTime2 = ticketModel.getPassTime();
@@ -68,8 +71,10 @@ public class TicketTransfersModel {
         firstClassSeatPrice2 = ticketModel.getFirstClassSeatPrice();
         secondClassSeatPrice2 = ticketModel.getSecondClassSeatPrice();
         businessClassSeatPrice2 = ticketModel.getBusinessClassSeatPrice();
-    }
 
+        stopTime = (departureTime2.getTime()-arrivalTime1.getTime())/1000/60;
+        passTime = passTime1 + passTime2 + stopTime;
+    }
     public String getDepartureTime1(){
         String time = null;
         SimpleDateFormat dateformat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");

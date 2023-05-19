@@ -123,11 +123,11 @@ public class TrainCreator {
             intermediateNode.put("railwayId",intermediateStationModel.getRailwayId());
             intermediateNode.put("passTime",passTime);
             intermediateNode.put("residenceTime",residenceTime);
-            intermediateNode.put("secondClassSeatPrice",price);
-            intermediateNode.put("firstClassSeatPrice",price * 1.45);
-            intermediateNode.put("businessClassSeatPrice",price * 2.3);
-            intermediateNode.put("hardSeatPrice",price * 1.9);
-            intermediateNode.put("softSeatPrice", price * 2.8);
+            intermediateNode.put("secondClassSeatPrice",(int)price);
+            intermediateNode.put("firstClassSeatPrice",(int)(price * 1.45));
+            intermediateNode.put("businessClassSeatPrice",(int)(price * 2.3));
+            intermediateNode.put("hardSeatPrice",(int)(price * 1.9));
+            intermediateNode.put("softSeatPrice", (int)(price * 2.8));
             intermediateNode.put("ext",intermediateStationModel.getExt());
             arrayNode.add(intermediateNode);
         }
@@ -140,11 +140,11 @@ public class TrainCreator {
         arrivalNode.put("stationId",arrivalStationModel.getStationId());
         arrivalNode.put("railwayId",arrivalStationModel.getRailwayId());
         arrivalNode.put("passTime",passTime);
-        arrivalNode.put("secondClassSeatPrice",price);
-        arrivalNode.put("firstClassSeatPrice",price * 1.45);
-        arrivalNode.put("businessClassSeatPrice",price * 2.3);
-        arrivalNode.put("hardSeatPrice",price * 1.9);
-        arrivalNode.put("softSeatPrice", price * 2.8);
+        arrivalNode.put("secondClassSeatPrice",(int)price);
+        arrivalNode.put("firstClassSeatPrice",(int)(price * 1.45));
+        arrivalNode.put("businessClassSeatPrice",(int)(price * 2.3));
+        arrivalNode.put("hardSeatPrice",(int)(price * 1.9));
+        arrivalNode.put("softSeatPrice", (int)(price * 2.8));
         arrivalNode.put("ext",arrivalStationModel.getExt());
         arrayNode.add(arrivalNode);
 

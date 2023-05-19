@@ -10,4 +10,7 @@ import java.util.List;
 public interface StationMapper {
     @Select("select * from stations")
     List<Station> findAllStation();
+
+    @Select("select station_name from stations where station_id = #{id}")
+    String getStationNameById(long id);
 }

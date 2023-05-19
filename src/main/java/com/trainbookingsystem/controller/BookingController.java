@@ -1,6 +1,9 @@
 package com.trainbookingsystem.controller;
 
+import com.trainbookingsystem.entity.DirectTicket;
+import com.trainbookingsystem.entity.TransfersTicket;
 import com.trainbookingsystem.mapper.BookingMapper;
+import com.trainbookingsystem.mapper.UserMapper;
 import com.trainbookingsystem.model.TicketModel;
 import com.trainbookingsystem.model.TicketTransfersModel;
 import com.trainbookingsystem.result.Result;
@@ -15,17 +18,28 @@ public class BookingController {
     @Resource
     BookingMapper bookingMapper;
 
+    @Resource
+    UserMapper userMapper;
+
     @GetMapping("/api/saveTicket")
-    public Result saveTicket(TicketModel ticketModel){
-        System.out.println("hahah");
-        bookingMapper.addTicket(ticketModel);
+    public Result saveTicket(DirectTicket directTicket){
+        bookingMapper.addTicket(directTicket);
         return new Result(200);
     }
 
     @GetMapping("/api/saveTransfersTicket")
-    public Result saveTransfersTicket(TicketTransfersModel ticketTransfersModel){
-        System.out.println(ticketTransfersModel);
-        bookingMapper.addTransfersTicket(ticketTransfersModel);
+    public Result saveTransfersTicket(TransfersTicket transfersTicket){
+        bookingMapper.addTransfersTicket(transfersTicket);
         return new Result(200);
+    }
+
+    @GetMapping("/api/getDirectTicketByUserId")
+    public List<DirectTicket> getDirectTicketByUserId(long id){
+        return userMapper.getDirectTicketByUserId(id);
+    }
+
+    @GetMapping("/api/getTransfersTicketByUserId")
+    public List<TransfersTicket> getTransfersTicketByUserId(long id){
+        return userMapper.getTransferTicketByUserId(id);
     }
 }

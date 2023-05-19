@@ -16,7 +16,7 @@ public class NetController {
     NetMapper netMapper ;
     @GetMapping("/api/getNet")
     public List<Railway> getNet(){
-        System.out.println("hahah");
+//        System.out.println("hahah");
         return netMapper.getNet();
     }
 
@@ -37,5 +37,10 @@ public class NetController {
     public Result updateStationName(Station station){
         netMapper.updateStationName(station.getStationId(),station.getStationName());
         return new Result(200);
+    }
+
+    @GetMapping("/api/getStation")
+    public List<Station>getStation(){
+        return netMapper.getStation();
     }
 }

@@ -1,20 +1,28 @@
 package com.trainbookingsystem.parser;
 
+import com.trainbookingsystem.mapper.StationMapper;
 import com.trainbookingsystem.model.*;
+import lombok.Data;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 
+@Service
 public class TicketParser {
     private int i;
+    @Resource
+    private StationMapper stationMapper;
 
     public TicketModel getTicketModel (long departureStationId, long arrivalStationId,TrainModel trainModel){
         TicketModel ticketModel = new TicketModel();
 
         ticketModel.setTrainNo(trainModel.getTrainNo());
         ticketModel.setDepartureStationId(departureStationId);
+        ticketModel.setDepartureSationName(stationMapper.getStationNameById(departureStationId));
         ticketModel.setArrivalStationId(arrivalStationId);
-
+        ticketModel.setArrivalStationName(stationMapper.getStationNameById(arrivalStationId));
         Date a = getArrivalTime(arrivalStationId, trainModel.getBaseStationModels());
         Date b = getDepartureTime(departureStationId,trainModel.getBaseStationModels());
         ticketModel.setArrivalTime(a);
@@ -82,7 +90,7 @@ public class TicketParser {
     }
 
     private long getPassTime(long departureStationId, long arrivalStationId, List<BaseStationModel> baseStationModels){
-        return  getDepartureTime(departureStationId, baseStationModels).getTime() - getArrivalTime(arrivalStationId, baseStationModels).getTime();
+       return  getArrivalTime(arrivalStationId, baseStationModels).getTime() - getDepartureTime(departureStationId, baseStationModels).getTime();
     }
 
     private float getSoftSeatPrice(long departureStationId, long arrivalStationId, List<BaseStationModel> baseStationModels){

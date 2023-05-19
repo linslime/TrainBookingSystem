@@ -1,4 +1,4 @@
-package com.trainbookingsystem.model;
+package com.trainbookingsystem.entity;
 
 import lombok.Data;
 
@@ -6,28 +6,16 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Data
-public class TicketModel {
+public class DirectTicket {
     private long userId;
     private long trainNo;
     private long departureStationId;
-    private String departureSationName;
     private long arrivalStationId;
-    private String arrivalStationName;
     private Date departureTime;
     private Date arrivalTime;
     private long passTime;
-    private float softSeatPrice;
-    private float hardSeatPrice;
-    private float firstClassSeatPrice;
-    private float secondClassSeatPrice;
-    private float businessClassSeatPrice;
-
-    public Date departureTime() {
-        return departureTime;
-    }
-    public Date arrivalTime(){
-        return arrivalTime;
-    }
+    private String priceType;
+    private float price;
 
     public String getDepartureTime(){
         String time = null;
@@ -44,11 +32,7 @@ public class TicketModel {
     }
 
     public long getPassTime(){
-        return passTime/1000/60;
-    }
-
-    public float getSoftSeatPrice(){
-        return (int)softSeatPrice;
+        return passTime/1000/60 * -1;
     }
 
     public void setArrivalTime(Date arrivalTime) {

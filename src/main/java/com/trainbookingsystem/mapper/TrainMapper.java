@@ -11,4 +11,7 @@ public interface TrainMapper {
 
     @Select("select * from trains where train_no = #{trainNo}")
     Train selectByTrainNo(long trainNo);
+
+    @Select("select * from trains ")
+    List<Train> getAll();
 }

@@ -1,6 +1,7 @@
 package com.trainbookingsystem.mapper;
 
 import com.trainbookingsystem.entity.Railway;
+import com.trainbookingsystem.entity.Station;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -16,8 +17,13 @@ public interface NetMapper {
 
     @Delete("delete from railways where from_station_id = #{id} or to_station_id = #{id}")
     void deleteRailwayByStation(long id);
+
     @Delete("delete from stations where station_id = #{id}")
     void deleteStation(long id);
+
     @Update("update stations set station_name = #{name} where station_id = #{id}")
     void updateStationName(long id , String name);
+
+    @Select("select * from stations ")
+    List<Station> getStation();
 }
