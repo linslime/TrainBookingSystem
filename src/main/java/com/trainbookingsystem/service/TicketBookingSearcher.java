@@ -68,9 +68,7 @@ public class TicketBookingSearcher {
     }
     public List<TicketTransfersModel> getTransitTickets(){
         TrainParser trainParser = new TrainParser();
-        System.out.println(date);
         List<TrainTransfersModel> trainTransfersModels = trainTransfersMapper.select(fromStationId,toStationId,date);
-        System.out.println(trainTransfersModels.size());
         List<TicketTransfersModel> ticketTransfersModels = new ArrayList<>();
         Train train = null;
         for(TrainTransfersModel trainTransfersModel:trainTransfersModels){
