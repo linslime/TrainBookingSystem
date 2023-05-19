@@ -45,7 +45,7 @@ public class TicketBookingSearcher {
     TicketParser ticketParser = new TicketParser();
     public List<TicketModel> getDirectTickets(){
         TrainParser trainParser = new TrainParser();
-        List<Train> trains = ticketBookingSearcherMapper.selectTrainByStation(fromStationId, toStationId);
+        List<Train> trains = ticketBookingSearcherMapper.selectTrainByStation(fromStationId, toStationId,date);
         List<TrainModel> trainModels = new ArrayList<>();
         for (Train train : trains) {
             TrainModel trainModel = null;
@@ -68,10 +68,14 @@ public class TicketBookingSearcher {
     }
     public List<TicketTransfersModel> getTransitTickets(){
         TrainParser trainParser = new TrainParser();
-        List<TrainTransfersModel> trainTransfersModels = trainTransfersMapper.select(fromStationId,toStationId);
+        System.out.println(date);
+        List<TrainTransfersModel> trainTransfersModels = trainTransfersMapper.select(fromStationId,toStationId,date);
+        System.out.println(trainTransfersModels.size());
         List<TicketTransfersModel> ticketTransfersModels = new ArrayList<>();
         Train train = null;
+        int i = 0;
         for(TrainTransfersModel trainTransfersModel:trainTransfersModels){
+            System.out.println(i++);
             trainTransfersModel.setFromStationId(fromStationId);
             trainTransfersModel.setToStationId(toStationId);
 

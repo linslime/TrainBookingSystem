@@ -14,10 +14,10 @@ import java.util.ArrayList;
 @Service
 public class DataImpl {
     private int stationNumber = 10;
-    private int RouteNumber = 5;
+    private int RouteNumber = 12;
     private String beginTime = "2023-1-1";
-    private String endTime = "2023-1-2";
-    private int turns = 15;
+    private String endTime = "2023-1-7";
+    private int turns = 20;
 
     @Resource
     private DataMapper dataMapper ;

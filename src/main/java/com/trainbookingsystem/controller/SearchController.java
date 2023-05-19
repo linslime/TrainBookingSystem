@@ -48,6 +48,7 @@ public class SearchController {
         ticketBookingSearcher.setFromStationId(selectParm.getFromStationId());
         ticketBookingSearcher.setToStationId(selectParm.getToStationId());
         ticketBookingSearcher.setDate(date);
+
         ticketBookingSearcher.setIsSortedBy(selectParm.getSortWay());
         List<TicketModel> ticketModels = ticketBookingSearcher.getDirectTickets();
         return ticketModels;
