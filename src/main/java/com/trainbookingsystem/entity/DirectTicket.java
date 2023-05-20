@@ -31,9 +31,9 @@ public class DirectTicket {
         return time;
     }
 
-    public long getPassTime(){
-        return passTime/1000/60 * -1;
-    }
+//    public long getPassTime(){
+//        return passTime/1000/60 * -1;
+//    }
 
     public void setArrivalTime(Date arrivalTime) {
         this.arrivalTime = arrivalTime;
