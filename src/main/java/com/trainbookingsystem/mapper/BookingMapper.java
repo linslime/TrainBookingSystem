@@ -17,8 +17,8 @@ public interface BookingMapper {
     void addTransfersTicket(TransfersTicket transfersTicket);
 
     @Delete("delete from ticket_model where id = #{id}")
-    void deleteDirectTicketByUserId(long id);
+    void deleteDirectTicketById(long id);
 
     @Delete("delete from ticket_transfers_model where id = #{id}")
-    void deleteTransfersTicketByUserId(long id);
+    void deleteTransfersTicketById(long id);
 }

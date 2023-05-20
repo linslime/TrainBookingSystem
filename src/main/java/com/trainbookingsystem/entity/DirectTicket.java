@@ -7,6 +7,7 @@ import java.util.Date;
 
 @Data
 public class DirectTicket {
+    private long id;
     private long userId;
     private long trainNo;
     private long departureStationId;

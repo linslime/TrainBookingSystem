@@ -43,15 +43,15 @@ public class BookingController {
         return userMapper.getTransferTicketByUserId(id);
     }
 
-    @GetMapping("/api/deleteDirectTicketByUserId")
-    public Result deleteDirectTicketByUserId(long id){
-        bookingMapper.deleteDirectTicketByUserId(id);
+    @GetMapping("/api/deleteDirectTicketById")
+    public Result deleteDirectTicketById(long id){
+        bookingMapper.deleteDirectTicketById(id);
         return new Result(200);
     }
 
-    @GetMapping("/api/deleteTransfersTicketByUserId")
-    public Result deleteTransfersTicketByUserId(long id){
-        bookingMapper.deleteTransfersTicketByUserId(id);
+    @GetMapping("/api/deleteTransfersTicketById")
+    public Result deleteTransfersTicketById(long id){
+        bookingMapper.deleteTransfersTicketById(id);
         return new Result(200);
     }
 }

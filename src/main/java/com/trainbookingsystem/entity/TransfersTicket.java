@@ -6,6 +6,7 @@ import java.util.Date;
 
 @Data
 public class TransfersTicket {
+    private long id;
     private long userId;
     private long trainNo1;
     private long departureStationId1;
